@@ -1,0 +1,127 @@
+# Headless service for stable DNS entries of StatefulSet members.
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-adminservice-master-service
+  labels:
+    app: mysql-adminservice-master-service
+spec:
+  ports:
+  - name: mysql
+    port: 3318
+    targetPort: 3306
+  - name: xtrabackup
+    port: 3319
+    targetPort: 3307
+  type: LoadBalancer
+  selector:
+    master-app: mysql-adminservice
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-adminservice-master-statefulset
+spec:
+  selector:
+    matchLabels:
+      master-app: mysql-adminservice
+  serviceName: mysql-adminservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        master-app: mysql-adminservice
+    spec:
+      initContainers:
+      - name: init-mysql
+        image: mysql:5.7
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Generate mysql server-id from pod ordinal index.
+          [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          echo [mysqld] > /mnt/conf.d/server-id.cnf
+          # Add an offset to avoid reserved server-id=0 value.
+          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
+          # Copy appropriate conf.d files from config-map to emptyDir.
+          cp /mnt/config-map/primary.cnf /mnt/conf.d/       
+        volumeMounts:
+        - name: conf
+          mountPath: /mnt/conf.d
+        - name: config-map
+          mountPath: /mnt/config-map
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql
+              key: password
+        ports:
+        - name: mysql
+          containerPort: 3306
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 100m
+        # livenessProbe:
+        #   exec:
+        #     command: ["mysqladmin", "ping", "-p", "imad"]
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+        # readinessProbe:
+        #   exec:
+        #     # Check we can execute queries over TCP (skip-networking is off).
+        #     command: ["mysql", "-h", "127.0.0.1", "-p", "imad", -e", "SELECT 1"]
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 2
+        #   timeoutSeconds: 1
+      - name: xtrabackup
+        image: gcr.io/google-samples/xtrabackup:1.0
+        ports:
+        - name: xtrabackup
+          containerPort: 3307
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Start a server to send backups when requested by peers.
+          exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
+            "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root --password=imad"          
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        resources:
+          limits:
+            memory: 100Mi
+            cpu: 100m
+      volumes:
+      - name: conf
+        emptyDir: {}
+      - name: config-map
+        configMap:
+          name: mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 500Mi
