@@ -23,7 +23,7 @@ public class DeleteUserExecuter implements QueryExecuter<Void> {
         Query query = session.createQuery("SELECT u FROM User u WHERE u.userId = :userId");
         query.setParameter("userId", userId);
         User user = (User) query.getSingleResult();
-        
+
         session.delete(user);
 
         session.getTransaction().commit();
