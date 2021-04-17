@@ -15,7 +15,7 @@ public class GetUsersExecuter implements QueryExecuter<List<UserDTO>> {
     public ResponseModel<List<UserDTO>> executeQuery(Session session) {
         ResponseModel<List<UserDTO>> responseModel = new ResponseModel<>();
 
-        Query query = session.createQuery("SELECT new com.imadelfetouh.adminservice.model.dto.UserDTO(u.userId, u.username, u.photo, u.profile.bio, u.profile.location, u.profile.website) FROM User u");
+        Query query = session.createQuery("SELECT new com.imadelfetouh.adminservice.model.dto.UserDTO(u.userId, u.username, u.photo, u.profile.bio, u.profile.location, u.profile.website) FROM User u LEFT JOIN u.profile p");
 
         List<UserDTO> userDTOS = query.getResultList();
 
