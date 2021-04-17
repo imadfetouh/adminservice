@@ -1,0 +1,45 @@
+trigger:
+- main
+
+variables:
+  ADMINSERVICE_MYSQL_MASTER_HOST: localhost
+  ADMINSERVICE_MYSQL_REPLICA_HOST: localhost
+  ADMINSERVICE_MYSQL_MASTER_PORT: 3306
+  ADMINSERVICE_MYSQL_REPLICA_PORT: 3306
+  MYSQL_USER: root
+  MYSQL_PASS: imad
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: DockerCompose@0
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'DockerRegistry'
+    dockerComposeFile: 'docker/docker-compose.yml'
+    action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'up -d'
+    
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'adminservice/pom.xml'
+    goals: 'clean install sonar:sonar'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: true
+    sqMavenPluginVersionChoice: 'latest'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'DockerRegistry'
+    repository: 'imadelfetouh99/adminservice'
+    command: 'buildAndPush'
+    Dockerfile: 'docker/Dockerfile'
+    buildContext: 
+    tags: 'latest'
+
