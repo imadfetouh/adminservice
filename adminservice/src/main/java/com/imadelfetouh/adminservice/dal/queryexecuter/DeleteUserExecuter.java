@@ -1,6 +1,7 @@
 package com.imadelfetouh.adminservice.dal.queryexecuter;
 
 import com.imadelfetouh.adminservice.dal.configuration.QueryExecuter;
+import com.imadelfetouh.adminservice.dal.ormmodel.User;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
 import com.imadelfetouh.adminservice.model.response.ResponseType;
 import org.hibernate.Session;
@@ -19,14 +20,11 @@ public class DeleteUserExecuter implements QueryExecuter<Void> {
     public ResponseModel<Void> executeQuery(Session session) {
         ResponseModel<Void> responseModel = new ResponseModel<>();
 
-        Query queryUser = session.createQuery("DELETE FROM User u WHERE u.userId = :userId");
-        queryUser.setParameter("userId", userId);
-
-        Query queryProfile = session.createQuery("DELETE FROM Profile p WHERE p.profileId = (SELECT u.profile.profileId FROM User u WHERE u.userId = :userId)");
-        queryProfile.setParameter("userId", userId);
-
-        queryUser.executeUpdate();
-        queryProfile.executeUpdate();
+        Query query = session.createQuery("SELECT u FROM User u WHERE u.userId = :userId");
+        query.setParameter("userId", userId);
+        User user = (User) query.getSingleResult();
+        
+        session.delete(user);
 
         session.getTransaction().commit();
 

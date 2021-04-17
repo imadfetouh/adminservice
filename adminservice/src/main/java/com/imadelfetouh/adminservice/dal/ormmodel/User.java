@@ -41,7 +41,7 @@ public class User implements Serializable {
     @Column(name = "photo")
     private String photo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_Id", referencedColumnName = "profileId")
     private Profile profile;
 
