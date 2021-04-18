@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
-@Component
+//@Component
 public class CookieFilter implements Filter {
 
     @Override

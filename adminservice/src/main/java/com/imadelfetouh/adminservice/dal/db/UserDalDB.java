@@ -9,6 +9,10 @@ import com.imadelfetouh.adminservice.dalinterface.UserDal;
 import com.imadelfetouh.adminservice.model.dto.NewUserDTO;
 import com.imadelfetouh.adminservice.model.dto.UserDTO;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
+import com.imadelfetouh.adminservice.model.response.ResponseType;
+import com.imadelfetouh.adminservice.rabbit.RabbitProducer;
+import com.imadelfetouh.adminservice.rabbit.producer.AddUserProducer;
+import com.imadelfetouh.adminservice.rabbit.producer.DeleteUserProducer;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -24,12 +28,26 @@ public class UserDalDB implements UserDal {
     @Override
     public ResponseModel<Void> addUser(NewUserDTO newUserDTO) {
         Executer<Void> executer = new Executer<>(SessionType.WRITE);
-        return executer.execute(new AddUserExecuter(newUserDTO));
+        ResponseModel<Void> responseModel = executer.execute(new AddUserExecuter(newUserDTO));
+
+        if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
+            RabbitProducer rabbitProducer = new RabbitProducer();
+            rabbitProducer.produce(new AddUserProducer(newUserDTO));
+        }
+
+        return responseModel;
     }
 
     @Override
     public ResponseModel<Void> deleteUser(String userId) {
         Executer<Void> executer = new Executer<>(SessionType.WRITE);
-        return executer.execute(new DeleteUserExecuter(userId));
+        ResponseModel<Void> responseModel = executer.execute(new DeleteUserExecuter(userId));
+
+        if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
+            RabbitProducer rabbitProducer = new RabbitProducer();
+            rabbitProducer.produce(new DeleteUserProducer(userId));
+        }
+
+        return responseModel;
     }
 }

@@ -22,12 +22,18 @@ public class AddUserExecuter implements QueryExecuter<Void> {
     public ResponseModel<Void> executeQuery(Session session) {
         ResponseModel<Void> responseModel = new ResponseModel<>();
 
-        String profileId = UUID.randomUUID().toString();
-        String userId = UUID.randomUUID().toString();
+        if(newUserDTO.getUserId() == null) {
+            newUserDTO.setUserId(UUID.randomUUID().toString());
+        }
 
-        Profile profile = new Profile(profileId, "bio", "Helmond", "fontys.nl");
+        if(newUserDTO.getProfile().getProfileId() == null) {
+            newUserDTO.getProfile().setProfileId(UUID.randomUUID().toString());
+        }
 
-        User user = new User(userId, newUserDTO.getUsername(), newUserDTO.getPassword(), Role.USER, "new.jpg", profile);
+
+        Profile profile = new Profile(newUserDTO.getProfile().getProfileId(), newUserDTO.getProfile().getBio(), newUserDTO.getProfile().getLocation(), newUserDTO.getProfile().getWebsite());
+
+        User user = new User(newUserDTO.getUserId(), newUserDTO.getUsername(), newUserDTO.getPassword(), Role.valueOf(newUserDTO.getRole()), newUserDTO.getPhoto(), profile);
 
         session.persist(profile);
         session.persist(user);
