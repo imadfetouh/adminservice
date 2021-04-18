@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ChannelHelper {
+public abstract class ChannelHelper {
 
     private static final Logger logger = Logger.getLogger(ChannelHelper.class.getName());
 

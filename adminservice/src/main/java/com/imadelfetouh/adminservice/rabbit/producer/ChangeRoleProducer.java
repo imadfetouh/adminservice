@@ -3,6 +3,8 @@ package com.imadelfetouh.adminservice.rabbit.producer;
 import com.google.gson.Gson;
 import com.imadelfetouh.adminservice.model.dto.ChangeRoleDTO;
 import com.imadelfetouh.adminservice.rabbit.Producer;
+import com.imadelfetouh.adminservice.rabbit.RabbitProps;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 
 import java.util.logging.Level;
@@ -28,7 +30,9 @@ public class ChangeRoleProducer implements Producer {
             channel.exchangeDeclare(exchange_name, "direct", true);
             String json = gson.toJson(changeRoleDTO);
 
-            channel.basicPublish(exchange_name, "", null, json.getBytes());
+            AMQP.BasicProperties properties = RabbitProps.getInstance().createProperties();
+
+            channel.basicPublish(exchange_name, "", properties, json.getBytes());
         }
         catch (Exception e) {
             logger.log(Level.ALL, e.getMessage());

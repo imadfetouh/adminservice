@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class AddUserThread implements Runnable {
 
-    private Logger logger = Logger.getLogger(AddUserConsumer.class.getName());
+    private Logger logger = Logger.getLogger(AddUserThread.class.getName());
 
     @Override
     public void run() {
