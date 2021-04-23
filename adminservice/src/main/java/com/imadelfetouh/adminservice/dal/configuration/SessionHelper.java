@@ -8,10 +8,10 @@ public class SessionHelper {
 
     public SessionHelper(SessionType sessionType) {
         if(sessionType.equals(SessionType.WRITE)) {
-            this.session = ReadWriteConfiguration.getInstance().getSessionWriteConfiguration().getSession();
+            this.session = SessionWriteConfiguration.getInstance().getSession();
         }
         else{
-            this.session = ReadWriteConfiguration.getInstance().getSessionReadConfiguration().getSession();
+            this.session = SessionReadConfiguration.getInstance().getSession();
         }
 
         this.session.beginTransaction();

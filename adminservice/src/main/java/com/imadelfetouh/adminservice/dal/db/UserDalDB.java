@@ -13,6 +13,7 @@ import com.imadelfetouh.adminservice.model.response.ResponseType;
 import com.imadelfetouh.adminservice.rabbit.RabbitProducer;
 import com.imadelfetouh.adminservice.rabbit.producer.AddUserProducer;
 import com.imadelfetouh.adminservice.rabbit.producer.DeleteUserProducer;
+import com.imadelfetouh.adminservice.security.PasswordHash;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -27,8 +28,17 @@ public class UserDalDB implements UserDal {
 
     @Override
     public ResponseModel<Void> addUser(NewUserDTO newUserDTO) {
+        ResponseModel<Void> responseModel = new ResponseModel<>();
+
+        String password = PasswordHash.getInstance().hash(newUserDTO.getPassword());
+        if(password == null) {
+            responseModel.setResponseType(ResponseType.ERROR);
+            return responseModel;
+        }
+
+        newUserDTO.setPassword(password);
         Executer<Void> executer = new Executer<>(SessionType.WRITE);
-        ResponseModel<Void> responseModel = executer.execute(new AddUserExecuter(newUserDTO));
+        responseModel = executer.execute(new AddUserExecuter(newUserDTO));
 
         if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
             RabbitProducer rabbitProducer = new RabbitProducer();
