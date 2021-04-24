@@ -6,6 +6,7 @@ import com.imadelfetouh.adminservice.model.dto.UserDTO;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
 import com.imadelfetouh.adminservice.model.response.ResponseType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,9 @@ public class UserResource {
 
         if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
             return ResponseEntity.ok().build();
+        }
+        else if(responseModel.getResponseType().equals(ResponseType.USERNAMEALREADYINUSE)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
         return ResponseEntity.status(500).build();

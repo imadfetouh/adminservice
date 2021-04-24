@@ -3,6 +3,7 @@ package com.imadelfetouh.adminservice.dal.db;
 import com.imadelfetouh.adminservice.dal.configuration.Executer;
 import com.imadelfetouh.adminservice.dal.configuration.SessionType;
 import com.imadelfetouh.adminservice.dal.queryexecuter.AddUserExecuter;
+import com.imadelfetouh.adminservice.dal.queryexecuter.CheckUsernameExecuter;
 import com.imadelfetouh.adminservice.dal.queryexecuter.DeleteUserExecuter;
 import com.imadelfetouh.adminservice.dal.queryexecuter.GetUsersExecuter;
 import com.imadelfetouh.adminservice.dalinterface.UserDal;
@@ -28,21 +29,19 @@ public class UserDalDB implements UserDal {
 
     @Override
     public ResponseModel<Void> addUser(NewUserDTO newUserDTO) {
-        ResponseModel<Void> responseModel = new ResponseModel<>();
-
-        String password = PasswordHash.getInstance().hash(newUserDTO.getPassword());
-        if(password == null) {
-            responseModel.setResponseType(ResponseType.ERROR);
-            return responseModel;
-        }
-
-        newUserDTO.setPassword(password);
-        Executer<Void> executer = new Executer<>(SessionType.WRITE);
-        responseModel = executer.execute(new AddUserExecuter(newUserDTO));
+        Executer<Void> executer = new Executer<>(SessionType.READ);
+        ResponseModel<Void> responseModel = executer.execute(new CheckUsernameExecuter(newUserDTO.getUsername()));
 
         if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
-            RabbitProducer rabbitProducer = new RabbitProducer();
-            rabbitProducer.produce(new AddUserProducer(newUserDTO));
+            String password = PasswordHash.getInstance().hash(newUserDTO.getPassword());
+            newUserDTO.setPassword(password);
+
+            Executer<Void> executerRegister = new Executer<>(SessionType.WRITE);
+            responseModel = executerRegister.execute(new AddUserExecuter(newUserDTO));
+            if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
+                RabbitProducer rabbitProducer = new RabbitProducer();
+                rabbitProducer.produce(new AddUserProducer(newUserDTO));
+            }
         }
 
         return responseModel;
