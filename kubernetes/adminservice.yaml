@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminservice-deployment
+  labels:
+    app: adminservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminservice
+  template:
+    metadata:
+      labels:
+        app: adminservice
+    spec:
+      containers:
+        - name: adminservice
+          imagePullPolicy: Always
+          image: imadelfetouh99/adminservice:latest
+          ports:
+            - containerPort: 8085
+          env:
+            - name: ADMINSERVICE_MYSQL_MASTER_HOST
+              value: mysql-adminservice-master-service
+            - name: ADMINSERVICE_MYSQL_REPLICA_HOST
+              value: mysql-adminservice-replica-service
+            - name: ADMINSERVICE_MYSQL_MASTER_PORT
+              value: '3318'
+            - name: ADMINSERVICE_MYSQL_REPLICA_PORT
+              value: '3318'
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: password
+            - name: RABBIT_HOST
+              value: rabbit-service
+            - name: secretkey
+              value: secretkeyforkwetterimadinjwt@semester6
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: 100m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminservice-service
+spec:
+  selector:
+    app: adminservice
+  ports:
+    - port: 8085
+      targetPort: 8085
