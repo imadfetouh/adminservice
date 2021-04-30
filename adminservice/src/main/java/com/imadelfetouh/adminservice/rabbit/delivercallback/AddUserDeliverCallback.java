@@ -28,6 +28,7 @@ public class AddUserDeliverCallback implements DeliverCallback {
     @Override
     public void handle(String s, Delivery delivery) throws IOException {
         try {
+            logger.info("Message received add user");
             if(!delivery.getProperties().getCorrelationId().equals(rabbitProps.getCorrId())) {
                 String json = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 NewUserDTO newUserDTO = gson.fromJson(json, NewUserDTO.class);
@@ -37,7 +38,7 @@ public class AddUserDeliverCallback implements DeliverCallback {
             }
         }
         catch (Exception e) {
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 }

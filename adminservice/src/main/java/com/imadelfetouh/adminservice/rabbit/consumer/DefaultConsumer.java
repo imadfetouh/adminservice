@@ -25,6 +25,7 @@ public class DefaultConsumer implements NonStopConsumer {
     @Override
     public void consume(Channel channel) {
         try {
+            logger.info("Starting listening: " + queue_name);
             channel.queueDeclare(queue_name, false, false, false, null);
             channel.exchangeDeclare(exchange_name, "direct", true);
             channel.queueBind(queue_name, exchange_name, "");
@@ -35,7 +36,7 @@ public class DefaultConsumer implements NonStopConsumer {
             monitor.start();
         }
         catch (Exception e) {
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 }
