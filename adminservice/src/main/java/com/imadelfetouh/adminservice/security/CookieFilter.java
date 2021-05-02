@@ -12,9 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 @Component
 public class CookieFilter implements Filter {
+
+    private final static Logger logger = Logger.getLogger(CookieFilter.class.getName());
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -23,8 +26,10 @@ public class CookieFilter implements Filter {
 
         Cookie[] cookies = httpServletRequest.getCookies();
         if(cookies != null) {
+            logger.info("No cookies found");
             Cookie cookie = Arrays.stream(cookies).filter(c -> c.getName().equals("jwt-token")).findFirst().orElse(null);
             if(cookie == null) {
+                logger.info("cookie jwt-token not found");
                 httpServletResponse.setStatus(401);
                 return;
             }
@@ -38,6 +43,7 @@ public class CookieFilter implements Filter {
                     filterChain.doFilter(httpServletRequest, httpServletResponse);
                 }
                 else{
+                    logger.info("User is an administrator");
                     httpServletResponse.setStatus(401);
                 }
             }
