@@ -24,7 +24,7 @@ spec:
             - name: ADMINSERVICE_MYSQL_MASTER_HOST
               value: mysql-adminservice-master-service
             - name: ADMINSERVICE_MYSQL_REPLICA_HOST
-              value: mysql-adminservice-replica-service
+              value: mysql-adminservice-master-service
             - name: ADMINSERVICE_MYSQL_MASTER_PORT
               value: '3318'
             - name: ADMINSERVICE_MYSQL_REPLICA_PORT

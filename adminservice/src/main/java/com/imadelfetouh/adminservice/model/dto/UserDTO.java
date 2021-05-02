@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class UserDTO implements Serializable {
 
     private String userId;
+    private String role;
     private String username;
     private String photo;
     private String bio;
@@ -15,8 +16,9 @@ public class UserDTO implements Serializable {
 
     }
 
-    public UserDTO(String userId, String username, String photo, String bio, String location, String website) {
+    public UserDTO(String userId, String role, String username, String photo, String bio, String location, String website) {
         this.userId = userId;
+        this.role = role;
         this.username = username;
         this.photo = photo;
         this.bio = bio;
@@ -30,6 +32,14 @@ public class UserDTO implements Serializable {
 
     public String getUserId() {
         return userId;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public void setUsername(String username) {

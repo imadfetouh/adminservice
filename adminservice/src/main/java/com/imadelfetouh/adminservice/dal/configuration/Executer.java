@@ -22,7 +22,7 @@ public class Executer<T> extends SessionHelper {
             responseModel = queryExecuter.executeQuery(getSession());
         }
         catch (Exception e) {
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
             rollback();
             responseModel.setResponseType(ResponseType.ERROR);
         }

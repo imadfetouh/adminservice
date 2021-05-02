@@ -1,10 +1,12 @@
 package com.imadelfetouh.adminservice.endpoint;
 
+import com.google.gson.Gson;
 import com.imadelfetouh.adminservice.dalinterface.RoleDal;
 import com.imadelfetouh.adminservice.model.dto.ChangeRoleDTO;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
 import com.imadelfetouh.adminservice.model.response.ResponseType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +17,12 @@ public class RoleResource {
     @Autowired
     private RoleDal roleDal;
 
-    @PutMapping
-    public ResponseEntity<Void> deleteUser(@RequestBody ChangeRoleDTO changeRoleDTO) {
+    @PutMapping()
+    public ResponseEntity<Void> deleteUser(@RequestParam("role") String role) {
+
+        Gson gson = new Gson();
+
+        ChangeRoleDTO changeRoleDTO = gson.fromJson(role, ChangeRoleDTO.class);
 
         ResponseModel<Void> responseModel = roleDal.changeRole(changeRoleDTO);
 
