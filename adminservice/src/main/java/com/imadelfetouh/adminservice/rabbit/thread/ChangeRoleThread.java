@@ -31,7 +31,7 @@ public class ChangeRoleThread implements Runnable {
 
                 rabbitNonStopConsumer.consume(defaultConsumer);
             } catch (Exception e) {
-                logger.log(Level.ALL, e.getMessage());
+                logger.severe(e.getMessage());
             }
         }
     }

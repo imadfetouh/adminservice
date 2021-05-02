@@ -12,7 +12,7 @@ public class RabbitNonStopConsumer extends ChannelHelper{
             consumer.consume(getChannel());
         }
         catch (Exception e){
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
         }
         finally {
             closeChannel();

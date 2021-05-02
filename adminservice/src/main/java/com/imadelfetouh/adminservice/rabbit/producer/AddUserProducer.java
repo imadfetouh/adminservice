@@ -33,9 +33,11 @@ public class AddUserProducer implements Producer {
             AMQP.BasicProperties properties = RabbitProps.getInstance().createProperties();
 
             channel.basicPublish(exchange_name, "", properties, json.getBytes());
+
+            logger.info("Message add user send");
         }
         catch (Exception e) {
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 }

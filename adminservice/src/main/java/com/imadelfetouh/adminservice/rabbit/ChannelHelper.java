@@ -27,7 +27,7 @@ public abstract class ChannelHelper {
                 channel.close();
             }
         } catch (IOException | TimeoutException e) {
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 }

@@ -31,6 +31,9 @@ public class UserResource {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserDTO>> getUsers() {
+
+        logger.info("get user request made");
+
         ResponseModel<List<UserDTO>> responseModel = userDal.getUsers();
 
         if(responseModel.getResponseType().equals(ResponseType.EMPTY)) {
@@ -45,6 +48,8 @@ public class UserResource {
 
     @PostMapping()
     public ResponseEntity<Void> addUser(@RequestParam("user") String user, @RequestParam("photo") MultipartFile multipartFile) {
+
+        logger.info("add user request made");
 
         Gson gson = new Gson();
 
@@ -66,6 +71,8 @@ public class UserResource {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable("userId") String userId) {
+
+        logger.info("delete user request made");
 
         ResponseModel<Void> responseModel = userDal.deleteUser(userId);
 

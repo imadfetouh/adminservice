@@ -25,6 +25,7 @@ public class DeleteUserDeliverCallback implements DeliverCallback {
     @Override
     public void handle(String s, Delivery delivery) throws IOException {
         try {
+            logger.info("Message received delete user with corrId: " + delivery.getProperties().getCorrelationId());
             if(!delivery.getProperties().getCorrelationId().equals(rabbitProps.getCorrId())) {
                 String userId = new String(delivery.getBody(), StandardCharsets.UTF_8);
 
@@ -33,7 +34,7 @@ public class DeleteUserDeliverCallback implements DeliverCallback {
             }
         }
         catch (Exception e) {
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 }

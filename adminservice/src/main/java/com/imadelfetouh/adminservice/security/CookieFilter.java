@@ -26,7 +26,6 @@ public class CookieFilter implements Filter {
 
         Cookie[] cookies = httpServletRequest.getCookies();
         if(cookies != null) {
-            logger.info("No cookies found");
             Cookie cookie = Arrays.stream(cookies).filter(c -> c.getName().equals("jwt-token")).findFirst().orElse(null);
             if(cookie == null) {
                 logger.info("cookie jwt-token not found");
@@ -49,6 +48,9 @@ public class CookieFilter implements Filter {
                     return;
                 }
             }
+        }
+        else{
+            logger.info("No cookies found");
         }
 
         httpServletResponse.setStatus(401);

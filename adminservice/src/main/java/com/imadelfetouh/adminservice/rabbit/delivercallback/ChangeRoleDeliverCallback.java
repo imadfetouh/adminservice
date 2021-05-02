@@ -31,6 +31,7 @@ public class ChangeRoleDeliverCallback implements DeliverCallback {
     @Override
     public void handle(String s, Delivery delivery) throws IOException {
         try {
+            logger.info("Message received change role with corrId: " + delivery.getProperties().getCorrelationId());
             if(!delivery.getProperties().getCorrelationId().equals(rabbitProps.getCorrId())) {
                 String json = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 ChangeRoleDTO changeRoleDTO = gson.fromJson(json, ChangeRoleDTO.class);
@@ -40,7 +41,7 @@ public class ChangeRoleDeliverCallback implements DeliverCallback {
             }
         }
         catch (Exception e) {
-            logger.log(Level.ALL, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 }

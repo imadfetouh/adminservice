@@ -20,7 +20,7 @@ public class Monitor {
                     monitor.wait();
                     break;
                 } catch (InterruptedException e) {
-                    logger.log(Level.ALL, e.getMessage());
+                    logger.severe(e.getMessage());
                     Thread.currentThread().interrupt();
                     break;
                 }
