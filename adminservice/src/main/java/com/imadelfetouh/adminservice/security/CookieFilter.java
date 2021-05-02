@@ -41,10 +41,12 @@ public class CookieFilter implements Filter {
                 if(u.getRole().equals(Role.ADMINISTRATOR.name())) {
                     httpServletRequest.setAttribute("userdata", userData);
                     filterChain.doFilter(httpServletRequest, httpServletResponse);
+                    return;
                 }
                 else{
                     logger.info("User is an administrator");
                     httpServletResponse.setStatus(401);
+                    return;
                 }
             }
         }
