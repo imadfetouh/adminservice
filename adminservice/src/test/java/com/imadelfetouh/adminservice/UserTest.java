@@ -9,15 +9,14 @@ import com.imadelfetouh.adminservice.model.dto.NewUserDTO;
 import com.imadelfetouh.adminservice.model.dto.ProfileDTO;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
 import com.imadelfetouh.adminservice.model.response.ResponseType;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-class AddUserTest {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class UserTest {
 
     @BeforeAll
     static void setupDatabase() {
@@ -26,6 +25,7 @@ class AddUserTest {
     }
 
     @Test
+    @Order(1)
     void addUserCorrect() {
         UserDalDB userDalDB = new UserDalDB();
 
@@ -53,6 +53,7 @@ class AddUserTest {
     }
 
     @Test
+    @Order(2)
     void deleteUserCorrect() {
         UserDalDB userDalDB = new UserDalDB();
         ResponseModel<Void> responseModel = userDalDB.deleteUser("u123");
