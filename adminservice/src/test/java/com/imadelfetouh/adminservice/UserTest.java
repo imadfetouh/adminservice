@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -73,11 +74,14 @@ class UserTest {
         map.add("password", "imad");
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+        ResponseEntity<String> responseEntity = null;
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
-
-        Assertions.assertEquals(400, responseEntity.getStatusCode().value());
-
-
+        try{
+            responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        }
+        catch (HttpClientErrorException e) {
+            Assertions.assertEquals(400, e.getStatusCode().value());
+        }
+        
     }
 }
