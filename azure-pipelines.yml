@@ -24,7 +24,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'until ping localhost:15672; do sleep 1; done'
+    script: 'until ping -c1 http://localhost:15672 >/dev/null 2>&1; do :; done'
 
 - task: Maven@3
   inputs:
