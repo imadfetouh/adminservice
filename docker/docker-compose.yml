@@ -16,19 +16,28 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  # authservice:
-  #   image: imadelfetouh99/authservice:latest
-  #   container_name: authservice
-  #   restart: always
-  #   ports:
-  #     - "8081:8080"
-  #   environment:
-  #     AUTHSERVICE_MYSQL_MASTER_HOST: localhost
-  #     AUTHSERVICE_MYSQL_REPLICA_HOST: localhost
-  #     AUTHSERVICE_MYSQL_MASTER_PORT: 3306
-  #     AUTHSERVICE_MYSQL_REPLICA_PORT: 3306
-  #     MYSQL_USER: root
-  #     MYSQL_PASS: imad
-  #     RABBIT_HOST: rabbit
-  #     secretkey: secretkeyforkwetterimadinjwt@semester6
+  authservice:
+    image: imadelfetouh99/authservice:latest
+    container_name: authservice
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      AUTHSERVICE_MYSQL_MASTER_HOST: localhost
+      AUTHSERVICE_MYSQL_REPLICA_HOST: localhost
+      AUTHSERVICE_MYSQL_MASTER_PORT: 3306
+      AUTHSERVICE_MYSQL_REPLICA_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASS: imad
+      RABBIT_HOST: rabbit
+      secretkey: secretkeyforkwetterimadinjwt@semester6
+    depends_on:
+      - rabbit
+    links: 
+      - rabbit
