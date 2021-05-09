@@ -20,16 +20,16 @@ steps:
     dockerRegistryEndpoint: 'DockerRegistry'
     dockerComposeFile: 'docker/docker-compose.yml'
     action: 'Run a Docker Compose command'
-    dockerComposeCommand: 'up -d'
+    dockerComposeCommand: 'up'
 
 # - task: PowerShell@2
 #   inputs:
 #     targetType: 'inline'
 #     script: 'Start-Sleep -Seconds 120'
 
-- task: CmdLine@2
-  inputs:
-    script: 'until ping 127.0.0.1:8081; do sleep 1; done'
+# - task: CmdLine@2
+#   inputs:
+#     script: 'until ping 127.0.0.1:8081; do sleep 1; done'
 
 - task: Maven@3
   inputs:
