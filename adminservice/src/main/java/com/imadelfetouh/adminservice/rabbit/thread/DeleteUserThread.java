@@ -32,9 +32,12 @@ public class DeleteUserThread implements Runnable {
                 DefaultConsumer defaultConsumer = new DefaultConsumer(queue_name, exchange_name, deliverCallback);
 
                 rabbitNonStopConsumer.consume(defaultConsumer);
+                if(count == 0) {
+                    break;
+                }
             } catch (Exception e) {
                 logger.severe(e.getMessage());
-                if(count == 1) {
+                if(count == 0) {
                     break;
                 }
             }
