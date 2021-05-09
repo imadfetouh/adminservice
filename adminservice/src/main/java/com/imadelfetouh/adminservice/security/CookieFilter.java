@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-@Component
+//@Component
 public class CookieFilter implements Filter {
 
     private final static Logger logger = Logger.getLogger(CookieFilter.class.getName());

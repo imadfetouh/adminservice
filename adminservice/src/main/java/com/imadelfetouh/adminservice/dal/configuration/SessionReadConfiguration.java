@@ -23,8 +23,7 @@ public class SessionReadConfiguration {
         configuration.addProperties(properties);
         configuration.getProperties().put(Environment.URL, "jdbc:mysql://"+System.getenv("ADMINSERVICE_MYSQL_REPLICA_HOST")+":"+System.getenv("ADMINSERVICE_MYSQL_REPLICA_PORT")+"/adminservice");
 
-        configuration.addAnnotatedClass(User.class);
-        configuration.addAnnotatedClass(Profile.class);
+        AddClasses.getInstance().setClasses(configuration);
 
         sessionFactory = configuration.configure().buildSessionFactory();
     }

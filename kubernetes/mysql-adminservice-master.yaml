@@ -13,6 +13,7 @@ spec:
   - name: xtrabackup
     port: 3319
     targetPort: 3307
+  type: LoadBalancer
   selector:
     master-app: mysql-adminservice
 ---

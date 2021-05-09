@@ -25,7 +25,7 @@ public class RoleResource {
     @PutMapping()
     public ResponseEntity<Void> deleteUser(@RequestParam("role") String role) {
 
-        logger.info("Change role request with body: " + role);
+        logger.info("Change role request made");
 
         Gson gson = new Gson();
 

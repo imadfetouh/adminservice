@@ -5,6 +5,8 @@ import com.imadelfetouh.adminservice.rabbit.consumer.DefaultConsumer;
 import com.imadelfetouh.adminservice.rabbit.delivercallback.AddUserDeliverCallback;
 import com.rabbitmq.client.DeliverCallback;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,14 +26,19 @@ public class AddUserThread implements Runnable {
 
     @Override
     public void run() {
+        int count = 0;
         while(true) {
             try {
+                count++;
                 RabbitNonStopConsumer rabbitNonStopConsumer = new RabbitNonStopConsumer();
                 DefaultConsumer defaultConsumer = new DefaultConsumer(queue_name, exchange_name, deliverCallback);
 
                 rabbitNonStopConsumer.consume(defaultConsumer);
             } catch (Exception e) {
                 logger.severe(e.getMessage());
+                if(count == 3){
+                    break;
+                }
             }
         }
     }
