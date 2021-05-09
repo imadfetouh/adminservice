@@ -20,11 +20,12 @@ steps:
     dockerComposeFile: 'docker/docker-compose.yml'
     action: 'Run a Docker Compose command'
     dockerComposeCommand: 'up -d'
-  
-- task: Delay@1
+
+- task: PowerShell@2
   inputs:
-    delayForMinutes: '1'
-    
+    targetType: 'inline'
+    script: 'Start-Sleep -Seconds 120'
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'adminservice/pom.xml'
