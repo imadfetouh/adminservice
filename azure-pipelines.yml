@@ -22,9 +22,14 @@ steps:
     action: 'Run a Docker Compose command'
     dockerComposeCommand: 'up -d'
 
-- task: CmdLine@2
+# - task: CmdLine@2
+#   inputs:
+#     script: 'until ping -c1 http://localhost:8081 >/dev/null 2>&1; do :; done'
+
+- task: PowerShell@2
   inputs:
-    script: 'until ping -c1 http://localhost:8081 >/dev/null 2>&1; do :; done'
+    targetType: 'inline'
+    script: 'Start-Sleep -Seconds 120'
 
 - task: Maven@3
   inputs:
