@@ -86,9 +86,9 @@ class UserTest {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(responseEntity.getBody(), JsonObject.class);
 
-        Assertions.assertEquals("u123", jsonObject.get("userId"));
-        Assertions.assertEquals("imad", jsonObject.get("username"));
-        Assertions.assertEquals("ADMINISTRATOR", jsonObject.get("role"));
+        Assertions.assertEquals("u123", jsonObject.get("userId").getAsString());
+        Assertions.assertEquals("imad", jsonObject.get("username").getAsString());
+        Assertions.assertEquals("ADMINISTRATOR", jsonObject.get("role").getAsString());
 
         Assertions.assertEquals(200, responseEntity.getStatusCode().value());
 
