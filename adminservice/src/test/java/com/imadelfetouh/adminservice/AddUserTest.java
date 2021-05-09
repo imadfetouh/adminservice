@@ -51,4 +51,30 @@ class AddUserTest {
         Assertions.assertEquals(200, responseEntity.getStatusCode().value());
 
     }
+
+    @Test
+    void deleteUserCorrect() {
+        UserDalDB userDalDB = new UserDalDB();
+        ResponseModel<Void> responseModel = userDalDB.deleteUser("u123");
+
+        Assertions.assertEquals(ResponseType.CORRECT, responseModel.getResponseType());
+
+        String url = "http://localhost:8081/auth/signin";
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+        map.add("username", "imad");
+        map.add("password", "imad");
+
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+
+        Assertions.assertEquals(400, responseEntity.getStatusCode().value());
+
+
+    }
 }
