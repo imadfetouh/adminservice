@@ -54,11 +54,13 @@ class UserTest {
 
     @Test
     @Order(2)
-    void deleteUserCorrect() {
+    void deleteUserCorrect() throws InterruptedException {
         UserDalDB userDalDB = new UserDalDB();
         ResponseModel<Void> responseModel = userDalDB.deleteUser("u123");
 
         Assertions.assertEquals(ResponseType.CORRECT, responseModel.getResponseType());
+
+        Thread.sleep(2000);
 
         String url = "http://localhost:8081/auth/signin";
         RestTemplate restTemplate = new RestTemplate();
