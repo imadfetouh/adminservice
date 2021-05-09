@@ -34,9 +34,9 @@ public class DeleteUserThread implements Runnable {
                 rabbitNonStopConsumer.consume(defaultConsumer);
             } catch (Exception e) {
                 logger.severe(e.getMessage());
-                if(count == 3) {
-                    break;
-                }
+//                if(count == 3) {
+//                    break;
+//                }
             }
         }
     }
