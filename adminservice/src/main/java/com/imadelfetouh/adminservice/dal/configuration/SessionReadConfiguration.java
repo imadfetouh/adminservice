@@ -1,7 +1,5 @@
 package com.imadelfetouh.adminservice.dal.configuration;
 
-import com.imadelfetouh.adminservice.dal.ormmodel.Profile;
-import com.imadelfetouh.adminservice.dal.ormmodel.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -11,7 +9,7 @@ import java.util.Properties;
 
 public class SessionReadConfiguration {
 
-    private final static SessionReadConfiguration sessionReadConfiguration = new SessionReadConfiguration();
+    private static final SessionReadConfiguration sessionReadConfiguration = new SessionReadConfiguration();
     private final ReadWriteConfiguration readWriteConfiguration;
     private final SessionFactory sessionFactory;
 

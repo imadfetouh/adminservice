@@ -24,7 +24,7 @@ public class ChangeRoleThread implements Runnable {
 
     @Override
     public void run() {
-        int count = 0;
+        int count = 1;
         while(true) {
             try {
                 count++;
@@ -34,9 +34,9 @@ public class ChangeRoleThread implements Runnable {
                 rabbitNonStopConsumer.consume(defaultConsumer);
             } catch (Exception e) {
                 logger.severe(e.getMessage());
-//                if(count == 3) {
-//                    break;
-//                }
+                if(count == 1) {
+                    break;
+                }
             }
         }
     }
