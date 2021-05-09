@@ -8,6 +8,7 @@ variables:
   ADMINSERVICE_MYSQL_REPLICA_PORT: 3306
   MYSQL_USER: root
   MYSQL_PASS: imad
+  RABBIT_HOST: localhost
 
 pool:
   vmImage: ubuntu-latest
@@ -21,10 +22,14 @@ steps:
     action: 'Run a Docker Compose command'
     dockerComposeCommand: 'up -d'
 
-- task: PowerShell@2
+# - task: PowerShell@2
+#   inputs:
+#     targetType: 'inline'
+#     script: 'Start-Sleep -Seconds 120'
+
+- task: CmdLine@2
   inputs:
-    targetType: 'inline'
-    script: 'Start-Sleep -Seconds 120'
+    script: 'until ping 127.0.0.1:8081; do sleep 1; done'
 
 - task: Maven@3
   inputs:
