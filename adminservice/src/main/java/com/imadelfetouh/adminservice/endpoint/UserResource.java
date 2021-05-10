@@ -6,6 +6,8 @@ import com.imadelfetouh.adminservice.model.dto.NewUserDTO;
 import com.imadelfetouh.adminservice.model.dto.UserDTO;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
 import com.imadelfetouh.adminservice.model.response.ResponseType;
+import com.mchange.v2.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,11 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
@@ -55,10 +59,14 @@ public class UserResource {
 
         NewUserDTO newUserDTO = gson.fromJson(user, NewUserDTO.class);
 
+        String photo = UUID.randomUUID().toString() + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+        newUserDTO.setPhoto(photo);
+
+        uploadPhoto(multipartFile, photo);
+
         ResponseModel<Void> responseModel = userDal.addUser(newUserDTO);
 
         if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
-            uploadPhoto(multipartFile);
             return ResponseEntity.ok().build();
         }
         else if(responseModel.getResponseType().equals(ResponseType.USERNAMEALREADYINUSE)) {
@@ -84,11 +92,11 @@ public class UserResource {
 
     }
 
-    private void uploadPhoto(MultipartFile multipartFile) {
+    private void uploadPhoto(MultipartFile multipartFile, String photo) {
         try {
             String folder = "D:/imageskwetter/";
             byte[] bytes = multipartFile.getBytes();
-            Path path = Paths.get(folder + multipartFile.getOriginalFilename());
+            Path path = Paths.get(folder + photo);
             Files.write(path, bytes);
         } catch (IOException e) {
             logger.severe(e.getMessage());
