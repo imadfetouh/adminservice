@@ -24,23 +24,7 @@ public class ChangeRoleThread implements Runnable {
 
     @Override
     public void run() {
-        int count = 1;
-        while(true) {
-            try {
-                count++;
-                RabbitNonStopConsumer rabbitNonStopConsumer = new RabbitNonStopConsumer();
-                DefaultConsumer defaultConsumer = new DefaultConsumer(queue_name, exchange_name, deliverCallback);
-
-                rabbitNonStopConsumer.consume(defaultConsumer);
-                if(count == 0) {
-                    break;
-                }
-            } catch (Exception e) {
-                logger.severe(e.getMessage());
-                if(count == 0) {
-                    break;
-                }
-            }
-        }
+        StartConsuming startConsuming = new StartConsuming(queue_name, exchange_name, deliverCallback);
+        startConsuming.start();
     }
 }
