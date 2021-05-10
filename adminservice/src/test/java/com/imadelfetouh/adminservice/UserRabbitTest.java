@@ -11,6 +11,7 @@ import com.imadelfetouh.adminservice.dal.queryexecuter.SetupDatabase;
 import com.imadelfetouh.adminservice.model.dto.ChangeRoleDTO;
 import com.imadelfetouh.adminservice.model.dto.NewUserDTO;
 import com.imadelfetouh.adminservice.model.dto.ProfileDTO;
+import com.imadelfetouh.adminservice.model.dto.UserDTO;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
 import com.imadelfetouh.adminservice.model.response.ResponseType;
 import org.junit.jupiter.api.*;
@@ -20,8 +21,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UserTest {
+class UserRabbitTest {
 
     @BeforeAll
     static void setupDatabase() {
@@ -59,6 +62,19 @@ class UserTest {
 
     @Test
     @Order(2)
+    void getUsersCorrect() {
+        UserDalDB userDalDB = new UserDalDB();
+
+        ResponseModel<List<UserDTO>> responseModel = userDalDB.getUsers();
+
+        Assertions.assertEquals(ResponseType.CORRECT, responseModel.getResponseType());
+        Assertions.assertEquals(1, responseModel.getData().size());
+        Assertions.assertEquals("u123", responseModel.getData().get(0).getUserId());
+
+    }
+
+    @Test
+    @Order(3)
     void changeRoleCorrect() throws InterruptedException {
         RoleDalDB roleDalDB = new RoleDalDB();
 
@@ -95,7 +111,7 @@ class UserTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void deleteUserCorrect() throws InterruptedException {
         UserDalDB userDalDB = new UserDalDB();
         ResponseModel<Void> responseModel = userDalDB.deleteUser("u123");
