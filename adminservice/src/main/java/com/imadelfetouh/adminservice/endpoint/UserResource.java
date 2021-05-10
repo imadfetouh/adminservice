@@ -62,11 +62,10 @@ public class UserResource {
         String photo = UUID.randomUUID().toString() + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         newUserDTO.setPhoto(photo);
 
-        uploadPhoto(multipartFile, photo);
-
         ResponseModel<Void> responseModel = userDal.addUser(newUserDTO);
 
         if(responseModel.getResponseType().equals(ResponseType.CORRECT)) {
+            uploadPhoto(multipartFile, photo);
             return ResponseEntity.ok().build();
         }
         else if(responseModel.getResponseType().equals(ResponseType.USERNAMEALREADYINUSE)) {
