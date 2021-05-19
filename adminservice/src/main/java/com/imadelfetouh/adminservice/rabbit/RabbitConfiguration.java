@@ -48,4 +48,8 @@ public class RabbitConfiguration {
             return null;
         }
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
 }

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.imadelfetouh.adminservice.dal.ormmodel.Role;
 import com.imadelfetouh.adminservice.jwt.ValidateJWTToken;
 import com.imadelfetouh.adminservice.model.jwt.UserData;
+import com.imadelfetouh.adminservice.rabbit.RabbitConfiguration;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -14,7 +16,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-//@Component
+@Component
 public class CookieFilter implements Filter {
 
     private final static Logger logger = Logger.getLogger(CookieFilter.class.getName());
@@ -38,6 +40,12 @@ public class CookieFilter implements Filter {
 
                 UserData u = gson.fromJson(userData, UserData.class);
                 if(u.getRole().equals(Role.ADMINISTRATOR.name())) {
+                    if(RabbitConfiguration.getInstance().getConnection() == null && !httpServletRequest.getMethod().equals("GET")) {
+                        logger.info("Request made, but rabbit is down");
+                        httpServletResponse.setStatus(503);
+                        return;
+                    }
+
                     httpServletRequest.setAttribute("userdata", userData);
                     filterChain.doFilter(httpServletRequest, httpServletResponse);
                     return;
