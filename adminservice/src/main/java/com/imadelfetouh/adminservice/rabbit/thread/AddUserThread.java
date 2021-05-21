@@ -1,13 +1,7 @@
 package com.imadelfetouh.adminservice.rabbit.thread;
 
-import com.imadelfetouh.adminservice.rabbit.RabbitNonStopConsumer;
-import com.imadelfetouh.adminservice.rabbit.consumer.DefaultConsumer;
 import com.imadelfetouh.adminservice.rabbit.delivercallback.AddUserDeliverCallback;
 import com.rabbitmq.client.DeliverCallback;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AddUserThread implements Runnable {

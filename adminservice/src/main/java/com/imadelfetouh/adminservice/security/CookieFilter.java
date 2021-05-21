@@ -38,6 +38,11 @@ public class CookieFilter implements Filter {
                 String userData = ValidateJWTToken.getInstance().getUserData(cookie.getValue());
                 Gson gson = new Gson();
 
+                if(userData == null) {
+                    httpServletResponse.setStatus(401);
+                    return;
+                }
+
                 UserData u = gson.fromJson(userData, UserData.class);
                 if(u.getRole().equals(Role.ADMINISTRATOR.name())) {
                     if(RabbitConfiguration.getInstance().getConnection() == null && !httpServletRequest.getMethod().equals("GET")) {
