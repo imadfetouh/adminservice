@@ -7,6 +7,7 @@ import com.imadelfetouh.adminservice.dalinterface.RoleDal;
 import com.imadelfetouh.adminservice.model.dto.ChangeRoleDTO;
 import com.imadelfetouh.adminservice.model.response.ResponseModel;
 import com.imadelfetouh.adminservice.model.response.ResponseType;
+import com.imadelfetouh.adminservice.rabbit.RabbitConfiguration;
 import com.imadelfetouh.adminservice.rabbit.RabbitProducer;
 import com.imadelfetouh.adminservice.rabbit.producer.AddUserProducer;
 import com.imadelfetouh.adminservice.rabbit.producer.ChangeRoleProducer;

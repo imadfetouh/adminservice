@@ -45,7 +45,7 @@ public class CookieFilter implements Filter {
 
                 UserData u = gson.fromJson(userData, UserData.class);
                 if(u.getRole().equals(Role.ADMINISTRATOR.name())) {
-                    if(RabbitConfiguration.getInstance().getConnection() == null && !httpServletRequest.getMethod().equals("GET")) {
+                    if(!RabbitConfiguration.getInstance().getConnection().isOpen()) {
                         logger.info("Request made, but rabbit is down");
                         httpServletResponse.setStatus(503);
                         return;
